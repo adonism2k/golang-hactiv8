@@ -2,6 +2,8 @@
 
 This is a assignment to learn how to build a CLI service in golang in [Scalable Web Service with Golang](https://www.hacktiv8.com/scalable-web-services-with-golang) Course from [Hactiv8](https://www.hacktiv8.com/).
 
+[Link to github](https://github.com/adonism2k/golang-hactiv8/tree/assignment-1-sesi-3)
+
 ## How to run
 
 1. Clone this repository
