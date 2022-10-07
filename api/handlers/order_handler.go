@@ -19,7 +19,8 @@ import (
 
 func (h Handler) GetOrders(ctx *gin.Context) {
 	// TODO: get all orders
-	orders, err := h.Models.Order.getAllOrders() // !ERROR: undefined: h.Models.Order.getAllOrders() (type models.Models has no field or method getAllOrders) why?
+	// !ERROR: undefined: h.Models.Order.getAllOrders() (type models.Models has no field or method getAllOrders) why?
+	orders, err := h.Models.Order.getAllOrders()
 
 	// TODO: return a 200 ok status code
 	ctx.JSON(200, gin.H{
