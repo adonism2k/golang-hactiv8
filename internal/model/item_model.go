@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"context"
@@ -18,7 +18,7 @@ type Item struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
 
-func (i Item) getAllItems() ([]*Item, error) {
+func (i *Item) GetAll() ([]*Item, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -31,35 +31,35 @@ func (i Item) getAllItems() ([]*Item, error) {
 	return items, nil
 }
 
-func (i Item) createItem() (*Item, error) {
+func (i *Item) Create(item Item) (*Item, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Create(&i)
+	result := db.WithContext(ctx).Create(&item)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return &i, nil
+	return &item, nil
 }
 
-func (i Item) updateItem() (*Item, error) {
+func (i *Item) Update(item Item) (*Item, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Save(&i)
+	result := db.WithContext(ctx).Save(&item)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return &i, nil
+	return &item, nil
 }
 
-func (i Item) deleteItem() error {
+func (i *Item) Delete(item Item) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Delete(&i)
+	result := db.WithContext(ctx).Delete(&item)
 	if result.Error != nil {
 		return result.Error
 	}

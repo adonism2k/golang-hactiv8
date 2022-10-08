@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"context"
@@ -17,7 +17,7 @@ type Order struct {
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
 }
 
-func (o Order) getAllOrders() ([]*Order, error) {
+func (o *Order) GetAll() ([]*Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -30,35 +30,35 @@ func (o Order) getAllOrders() ([]*Order, error) {
 	return orders, nil
 }
 
-func (o Order) createOrder() (*Order, error) {
+func (o *Order) Create(order Order) (*Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Create(&o)
+	result := db.WithContext(ctx).Create(&order)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return &o, nil
+	return &order, nil
 }
 
-func (o Order) updateOrder() (*Order, error) {
+func (o *Order) Update(order Order) (*Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Save(&o)
+	result := db.WithContext(ctx).Save(&order)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return &o, nil
+	return &order, nil
 }
 
-func (o Order) deleteOrder() error {
+func (o *Order) Delete(order Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Delete(&o)
+	result := db.WithContext(ctx).Delete(&order)
 	if result.Error != nil {
 		return result.Error
 	}

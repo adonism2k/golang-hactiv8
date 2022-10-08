@@ -1,46 +1,111 @@
 package handlers
 
 import (
+	"assignment-2/internal/model"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 )
 
-// type Order struct {
-// 	OrderID      uint      `json:"order_id"`
-// 	OrderedAt    time.Time `json:"ordered_at"`
-// 	CustomerName string    `json:"customer_name"`
-// 	Items        Item      `json:"items"`
-// }
+type Order struct {
+	ID           uint      `json:"id"`
+	CustomerName string    `json:"customer_name"`
+	OrderedAt    time.Time `json:"ordered_at"`
+	Items        []Item    `json:"items"`
+}
 
-// type Item struct {
-// 	ItemID      uint   `json:"item_id"`
-// 	Description string `json:"description"`
-// 	Quantity    uint   `json:"quantity"`
-// }
+// Get All Orders godoc
+// @Summary Get All Orders
+// @Schemes
+// @Description Fetch all orders and all of its items
+// @Tags        Order
+// @Accept      json
+// @Produce     json
+// @Success     200 {array} Order
+// @Router      /orders [get]
+func (c *Config) GetOrders(ctx *gin.Context) {
+	orders, err := c.Models.Order.GetAll()
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error":   true,
+			"message": err.Error(),
+			"data":    nil,
+		})
+	}
 
-func (h Handler) GetOrders(ctx *gin.Context) {
-	// TODO: get all orders
-	// !ERROR: undefined: h.Models.Order.getAllOrders() (type models.Models has no field or method getAllOrders) why?
-	orders, err := h.Models.Order.getAllOrders()
-
-	// TODO: return a 200 ok status code
-	ctx.JSON(200, gin.H{
-		"message": "pong",
+	ctx.JSON(http.StatusOK, gin.H{
+		"error":   false,
+		"message": "Orders fetched successfully",
+		"data":    orders,
 	})
 }
 
-func (h Handler) CreateOrder(ctx *gin.Context) {
-	// TODO: create a new order
+// Create New Order godoc
+// @Summary Create New Order
+// @Schemes
+// @Description Create a new order and its items
+// @Tags        Order
+// @Accept      json
+// @Produce     json
+// @Success     201 {object} Order
+// @Router      /orders [post]
+func (c *Config) CreateOrder(ctx *gin.Context) {
+	// create a new order
+	var newOrder model.Order
+	err := ctx.BindJSON(&newOrder)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error":   true,
+			"message": err.Error(),
+			"data":    nil,
+		})
+	}
 
-	// TODO: return a 201 created status code
+	personResult, err := c.Models.Order.Create(newOrder)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error":   true,
+			"message": err.Error(),
+			"data":    nil,
+		})
+	}
+
+	// return a 201 created status code
+	ctx.JSON(http.StatusCreated, gin.H{
+		"error":   false,
+		"message": "Order created successfully",
+		"data":    personResult,
+	})
 }
 
-func (h Handler) UpdateOrder(ctx *gin.Context) {
+// Update Order godoc
+// @Summary Update Order
+// @Schemes
+// @Description Update an order and its items
+// @Tags        Order
+// @Accept      json
+// @Produce     json
+// @Success     200 {object} Order
+// @Router      /orders/{id} [put]
+// @Param       id path int true "Order ID"
+func (c *Config) UpdateOrder(ctx *gin.Context) {
 	// TODO: update an order
 
 	// TODO: return a 200 ok status code
 }
 
-func (h Handler) DeleteOrder(ctx *gin.Context) {
+// Delete Order godoc
+// @Summary Delete Order
+// @Schemes
+// @Description Delete an order and its items
+// @Tags        Order
+// @Accept      json
+// @Produce     json
+// @Success     204 {} Order
+// @Router      /orders/{id} [delete]
+// @Param       id path int true "Order ID"
+func (c *Config) DeleteOrder(ctx *gin.Context) {
 	// TODO: delete an order
 
 	// TODO: return a 204 no content status code

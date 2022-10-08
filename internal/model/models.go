@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"time"
@@ -10,11 +10,6 @@ const dbTimeout = time.Second * 3
 
 var db *gorm.DB
 
-type Models struct {
-	Item  Item
-	Order Order
-}
-
 func New(dbPool *gorm.DB) Models {
 	db = dbPool
 
@@ -22,4 +17,9 @@ func New(dbPool *gorm.DB) Models {
 		Item:  Item{},
 		Order: Order{},
 	}
+}
+
+type Models struct {
+	Item  Item
+	Order Order
 }

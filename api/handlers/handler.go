@@ -2,17 +2,10 @@ package handlers
 
 import (
 	"assignment-2/internal/database"
-	"assignment-2/internal/models"
+	"assignment-2/internal/model"
 )
 
-type Handler struct {
+type Config struct {
 	DB     database.Config
-	Models models.Models
-}
-
-func New(db database.Config, models models.Models) Handler {
-	return Handler{
-		DB:     db,
-		Models: models,
-	}
+	Models model.Models
 }

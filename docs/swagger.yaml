@@ -1,0 +1,116 @@
+basePath: /api/v1
+definitions:
+  handlers.Item:
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  handlers.Order:
+    properties:
+      customer_name:
+        type: string
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/handlers.Item'
+        type: array
+      ordered_at:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: dev.abdianrizky@gmail.com
+    name: Abdian Rizky
+    url: https://linktr.ee/adonism2k
+  description: Ini adalah dokumentasi API Contract untuk tugas assignment 2 Hactiv8.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Assignment 2 API
+  version: "1.0"
+paths:
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all orders and all of its items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.Order'
+            type: array
+      summary: Get All Orders
+      tags:
+      - Order
+    post:
+      consumes:
+      - application/json
+      description: Create a new order and its items
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.Order'
+      summary: Create New Order
+      tags:
+      - Order
+  /orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an order and its items
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: ""
+      summary: Delete Order
+      tags:
+      - Order
+    put:
+      consumes:
+      - application/json
+      description: Update an order and its items
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Order'
+      summary: Update Order
+      tags:
+      - Order
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

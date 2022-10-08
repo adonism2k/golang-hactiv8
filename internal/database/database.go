@@ -1,7 +1,7 @@
 package database
 
 import (
-	"assignment-2/internal/models"
+	"assignment-2/internal/model"
 	"database/sql"
 	"log"
 	"os"
@@ -29,7 +29,7 @@ func Connect() Config {
 		} else {
 			log.Println("Connected to Postgres!")
 
-			err = conn.AutoMigrate(&models.Item{}, &models.Order{})
+			err = conn.AutoMigrate(&model.Order{}, &model.Item{})
 			if err != nil {
 				log.Println("Failed to migrate the Models.")
 				log.Fatal(err)
