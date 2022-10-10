@@ -13,4 +13,4 @@ Assignment ini bertujuan untuk mempelajari use case untuk package Gin, Gorm, dan
    > docker compose up --build
    ```
 3. Wait until the building process is done, 
-4. open your browser and go to `[localhost:8000/swagger/index.html](http://localhost:8000/swagger/index.html)` to see the swagger documentation.
+4. open your browser and go to [localhost:8000/swagger/index.html](http://localhost:8000/swagger/index.html) to see the swagger documentation.
