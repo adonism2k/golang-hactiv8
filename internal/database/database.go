@@ -23,8 +23,8 @@ func Connect() Config {
 	for {
 		conn, err := Open(dsn)
 		if err != nil {
-			log.Println("Failed to connect to Postgres. Retrying in 2 sec...")
-			time.Sleep(2 * time.Second)
+			log.Println("Failed to connect to Postgres. Retrying in 4 sec...")
+			time.Sleep(4 * time.Second)
 			count++
 		} else {
 			log.Println("Connected to Postgres!")

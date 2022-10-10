@@ -20,11 +20,16 @@ package main
 import (
 	"assignment-2/api/handlers"
 	"assignment-2/api/routes"
+
+	// docs "assignment-2/docs"
 	"assignment-2/internal/database"
 	"assignment-2/internal/model"
 	"log"
 	"net/http"
 	"time"
+	// "github.com/gin-gonic/gin"
+	// swaggerfiles "github.com/swaggo/files"
+	// ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 const webPort = ":8000"
@@ -35,6 +40,10 @@ func main() {
 	conn := database.Connect()
 
 	StartServer(conn)
+	// r := gin.Default()
+	// docs.SwaggerInfo.BasePath = "/api/v1"
+	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	// r.Run(":8000")
 }
 
 func StartServer(conn database.Config) {

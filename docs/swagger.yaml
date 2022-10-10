@@ -1,27 +1,92 @@
 basePath: /api/v1
 definitions:
-  handlers.Item:
+  ItemResponse:
+    description: Item Model
     properties:
       code:
+        description: Item Code
+        example: PD-001
         type: string
       description:
+        description: Item Description
+        example: Product 1
         type: string
       id:
+        description: Item ID
+        example: 1
+        type: integer
+      order_id:
+        description: Order ID
+        example: 1
         type: integer
       quantity:
+        description: Quantity
+        example: 10
         type: integer
     type: object
-  handlers.Order:
+  JSONError:
+    description: JSONError is a generic JSON error response
+    properties:
+      code:
+        description: Code is an integer value containing the HTTP status code of the
+          error
+        example: 400
+        type: integer
+      message:
+        description: Message is a string value containing the error message
+        example: Error message
+        type: string
+    type: object
+  JSONResult:
+    description: JSONResult is a generic JSON response
+    properties:
+      data:
+        description: Data is an interface{} value containing the data returned by
+          the request
+      error:
+        description: Error is an JSONError containing information about the error
+      message:
+        description: Message is a string value containing a message about the request
+        example: Response message
+        type: string
+      success:
+        description: Success is a boolean value indicating whether the request was
+          successful or not
+        example: true
+        type: boolean
+    type: object
+  OrderRequest:
+    description: OrderRequest Model
     properties:
       customer_name:
+        description: Customer Name
+        example: John Doe
+        type: string
+      items:
+        description: Items
+        items:
+          $ref: '#/definitions/ItemResponse'
+        type: array
+    type: object
+  OrderResponse:
+    description: Order Model
+    properties:
+      customer_name:
+        description: Customer Name
+        example: John Doe
         type: string
       id:
+        description: Order ID
+        example: 1
         type: integer
       items:
+        description: Items
         items:
-          $ref: '#/definitions/handlers.Item'
+          $ref: '#/definitions/ItemResponse'
         type: array
       ordered_at:
+        description: Ordered At
+        example: "2022-10-10T11:52:28.431369Z"
         type: string
     type: object
 host: localhost:8000
@@ -47,11 +112,29 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Success
           schema:
-            items:
-              $ref: '#/definitions/handlers.Order'
-            type: array
+            allOf:
+            - $ref: '#/definitions/JSONResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/OrderResponse'
+                  type: array
+                error:
+                  type: object
+              type: object
+        "400":
+          description: Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/JSONResult'
+            - properties:
+                data:
+                  type: object
+                error:
+                  $ref: '#/definitions/JSONError'
+              type: object
       summary: Get All Orders
       tags:
       - Order
@@ -59,13 +142,38 @@ paths:
       consumes:
       - application/json
       description: Create a new order and its items
+      parameters:
+      - description: Order Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/OrderRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/handlers.Order'
+            allOf:
+            - $ref: '#/definitions/JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/OrderResponse'
+                error:
+                  type: object
+              type: object
+        "400":
+          description: Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/JSONResult'
+            - properties:
+                data:
+                  type: object
+                error:
+                  $ref: '#/definitions/JSONError'
+              type: object
       summary: Create New Order
       tags:
       - Order
@@ -85,8 +193,17 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Error
           schema:
-            type: ""
+            allOf:
+            - $ref: '#/definitions/JSONResult'
+            - properties:
+                data:
+                  type: object
+                error:
+                  $ref: '#/definitions/JSONError'
+              type: object
       summary: Delete Order
       tags:
       - Order
@@ -95,6 +212,12 @@ paths:
       - application/json
       description: Update an order and its items
       parameters:
+      - description: Order Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/OrderRequest'
       - description: Order ID
         in: path
         name: id
@@ -104,9 +227,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Success
           schema:
-            $ref: '#/definitions/handlers.Order'
+            allOf:
+            - $ref: '#/definitions/JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/OrderResponse'
+                error:
+                  type: object
+              type: object
+        "400":
+          description: Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/JSONResult'
+            - properties:
+                data:
+                  type: object
+                error:
+                  $ref: '#/definitions/JSONError'
+              type: object
       summary: Update Order
       tags:
       - Order

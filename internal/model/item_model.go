@@ -7,16 +7,26 @@ import (
 	"gorm.io/gorm"
 )
 
+// Item Model info
+// @Description Item Model
 type Item struct {
-	ID          uint           `json:"id" gorm:"primarykey"`
-	Code        string         `json:"code" gorm:"type:varchar(100);not null;unique"`
-	Description string         `json:"description"`
-	Quantity    int            `json:"quantity"`
-	OrderID     uint           `json:"order_id"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
-}
+	ID          int            `gorm:"primarykey" swaggerignore:"true" json:"-"`
+	Code        string         `gorm:"type:varchar(100);not null;unique" json:"code" example:"PD-001"`    // Item Code
+	Description string         `gorm:"type:varchar(100);not null" json:"description" example:"Product 1"` // Item Description
+	Quantity    int            `gorm:"type:int;not null" json:"quantity" example:"10"`                    // Quantity
+	OrderID     int            `gorm:"not null;foreignkey:OrderID" swaggerignore:"true" json:"-"`
+	CreatedAt   time.Time      `swaggerignore:"true" gorm:"autoCreateTime" json:"-"`
+	UpdatedAt   time.Time      `swaggerignore:"true" gorm:"autoUpdateTime" json:"-"`
+	DeletedAt   gorm.DeletedAt `swaggerignore:"true" gorm:"index" json:"-"`
+} // @name ItemResponse
+
+// Item Request info
+// @Description Item Request
+type ItemRequest struct {
+	Code        string `json:"code" example:"PD-001"`           // Item Code
+	Description string `json:"description" example:"Product 1"` // Item Description
+	Quantity    int    `json:"quantity" example:"10"`           // Item Quantity
+} // @name ItemRequest
 
 func (i *Item) GetAll() ([]*Item, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -47,7 +57,7 @@ func (i *Item) Update(item Item) (*Item, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Save(&item)
+	result := db.WithContext(ctx).Where("order_id = ?", item.OrderID).Updates(&item)
 	if result.Error != nil {
 		return nil, result.Error
 	}

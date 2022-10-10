@@ -40,12 +40,48 @@ const docTemplate = `{
                 "summary": "Get All Orders",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/handlers.Order"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/OrderResponse"
+                                            }
+                                        },
+                                        "error": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "error": {
+                                            "$ref": "#/definitions/JSONError"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -62,11 +98,58 @@ const docTemplate = `{
                     "Order"
                 ],
                 "summary": "Create New Order",
+                "parameters": [
+                    {
+                        "description": "Order Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/OrderRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/handlers.Order"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/OrderResponse"
+                                        },
+                                        "error": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "error": {
+                                            "$ref": "#/definitions/JSONError"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -87,6 +170,15 @@ const docTemplate = `{
                 "summary": "Update Order",
                 "parameters": [
                     {
+                        "description": "Order Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/OrderRequest"
+                        }
+                    },
+                    {
                         "type": "integer",
                         "description": "Order ID",
                         "name": "id",
@@ -96,9 +188,45 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/handlers.Order"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/OrderResponse"
+                                        },
+                                        "error": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "error": {
+                                            "$ref": "#/definitions/JSONError"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -126,9 +254,27 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Error",
                         "schema": {
-                            "type": ""
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "error": {
+                                            "$ref": "#/definitions/JSONError"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -136,40 +282,118 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.Item": {
+        "ItemResponse": {
+            "description": "Item Model",
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "description": "Item Code",
+                    "type": "string",
+                    "example": "PD-001"
                 },
                 "description": {
-                    "type": "string"
+                    "description": "Item Description",
+                    "type": "string",
+                    "example": "Product 1"
                 },
                 "id": {
-                    "type": "integer"
+                    "description": "Item ID",
+                    "type": "integer",
+                    "example": 1
+                },
+                "order_id": {
+                    "description": "Order ID",
+                    "type": "integer",
+                    "example": 1
                 },
                 "quantity": {
-                    "type": "integer"
+                    "description": "Quantity",
+                    "type": "integer",
+                    "example": 10
                 }
             }
         },
-        "handlers.Order": {
+        "JSONError": {
+            "description": "JSONError is a generic JSON error response",
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code is an integer value containing the HTTP status code of the error",
+                    "type": "integer",
+                    "example": 400
+                },
+                "message": {
+                    "description": "Message is a string value containing the error message",
+                    "type": "string",
+                    "example": "Error message"
+                }
+            }
+        },
+        "JSONResult": {
+            "description": "JSONResult is a generic JSON response",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "Data is an interface{} value containing the data returned by the request"
+                },
+                "error": {
+                    "description": "Error is an JSONError containing information about the error"
+                },
+                "message": {
+                    "description": "Message is a string value containing a message about the request",
+                    "type": "string",
+                    "example": "Response message"
+                },
+                "success": {
+                    "description": "Success is a boolean value indicating whether the request was successful or not",
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "OrderRequest": {
+            "description": "OrderRequest Model",
             "type": "object",
             "properties": {
                 "customer_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
+                    "description": "Customer Name",
+                    "type": "string",
+                    "example": "John Doe"
                 },
                 "items": {
+                    "description": "Items",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/handlers.Item"
+                        "$ref": "#/definitions/ItemResponse"
+                    }
+                }
+            }
+        },
+        "OrderResponse": {
+            "description": "Order Model",
+            "type": "object",
+            "properties": {
+                "customer_name": {
+                    "description": "Customer Name",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "id": {
+                    "description": "Order ID",
+                    "type": "integer",
+                    "example": 1
+                },
+                "items": {
+                    "description": "Items",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ItemResponse"
                     }
                 },
                 "ordered_at": {
-                    "type": "string"
+                    "description": "Ordered At",
+                    "type": "string",
+                    "example": "2022-10-10T11:52:28.431369Z"
                 }
             }
         }
