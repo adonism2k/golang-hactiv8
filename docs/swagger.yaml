@@ -15,10 +15,6 @@ definitions:
         description: Item ID
         example: 1
         type: integer
-      order_id:
-        description: Order ID
-        example: 1
-        type: integer
       quantity:
         description: Quantity
         example: 10

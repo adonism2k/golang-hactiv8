@@ -301,11 +301,6 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
-                "order_id": {
-                    "description": "Order ID",
-                    "type": "integer",
-                    "example": 1
-                },
                 "quantity": {
                     "description": "Quantity",
                     "type": "integer",

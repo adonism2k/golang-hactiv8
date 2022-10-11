@@ -3,20 +3,17 @@ package model
 import (
 	"context"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 // Order Model godoc
 // @Description Order Model
 type Order struct {
-	ID           int            `gorm:"primarykey" swaggerignore:"true" json:"-"`
+	ID           int            `gorm:"primarykey" json:"id" example:"1"`                                       // Order ID
 	CustomerName string         `gorm:"type:varchar(100);not null" json:"customer_name" example:"John Doe"`     // Customer Name
 	OrderedAt    time.Time      `gorm:"autoCreateTime" json:"ordered_at" example:"2022-10-10T11:52:28.431369Z"` // Ordered At
 	Items        []Item         `gorm:"foreignKey:OrderID" json:"items"`                                        // Items
 	CreatedAt    time.Time      `gorm:"autoCreateTime" swaggerignore:"true" json:"-"`
 	UpdatedAt    time.Time      `gorm:"autoUpdateTime" swaggerignore:"true" json:"-"`
-	DeletedAt    gorm.DeletedAt `gorm:"index" swaggerignore:"true" json:"-"`
 } // @name OrderResponse
 
 // OrderRequest Model godoc
@@ -45,10 +42,15 @@ func (o *Order) Create(order Order) (*Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.Debug().WithContext(ctx).Create(&order)
+	tx := db.WithContext(ctx).Begin()
+
+	result := tx.Create(&order)
 	if result.Error != nil {
+		tx.Rollback()
 		return nil, result.Error
 	}
+
+	tx.Commit()
 
 	return &order, nil
 }
@@ -58,18 +60,21 @@ func (o *Order) Update(id int, order Order) (*Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.Debug().WithContext(ctx).Model(&o).Where("id = ?", id).Updates(order)
+	for _, item := range order.Items {
+		result := db.WithContext(ctx).Model(&Item{}).Where("code = ?", item.Code).Where("order_id", id).Updates(&item)
+		if result.Error != nil {
+			return nil, result.Error
+		}
+	}
+
+	result := db.WithContext(ctx).Where("id = ?", id).Updates(Order{CustomerName: order.CustomerName})
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	// Update the items of the order
-	for _, item := range order.Items {
-		item.OrderID = id
-		_, err := item.Update(item)
-		if err != nil {
-			return nil, err
-		}
+	result = db.WithContext(ctx).Preload("Items").First(&order, id)
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return &order, nil
@@ -80,7 +85,7 @@ func (o *Order) Delete(order Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.Debug().WithContext(ctx).Select("Items").Delete(&order)
+	result := db.WithContext(ctx).Select("Items").Unscoped().Delete(&order)
 	if result.Error != nil {
 		return result.Error
 	}

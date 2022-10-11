@@ -3,21 +3,18 @@ package model
 import (
 	"context"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 // Item Model info
 // @Description Item Model
 type Item struct {
-	ID          int            `gorm:"primarykey" swaggerignore:"true" json:"-"`
+	ID          int            `gorm:"primarykey" json:"id" example:"1"`                                  // Item ID
 	Code        string         `gorm:"type:varchar(100);not null;unique" json:"code" example:"PD-001"`    // Item Code
 	Description string         `gorm:"type:varchar(100);not null" json:"description" example:"Product 1"` // Item Description
 	Quantity    int            `gorm:"type:int;not null" json:"quantity" example:"10"`                    // Quantity
 	OrderID     int            `gorm:"not null;foreignkey:OrderID" swaggerignore:"true" json:"-"`
 	CreatedAt   time.Time      `swaggerignore:"true" gorm:"autoCreateTime" json:"-"`
 	UpdatedAt   time.Time      `swaggerignore:"true" gorm:"autoUpdateTime" json:"-"`
-	DeletedAt   gorm.DeletedAt `swaggerignore:"true" gorm:"index" json:"-"`
 } // @name ItemResponse
 
 // Item Request info
@@ -53,11 +50,11 @@ func (i *Item) Create(item Item) (*Item, error) {
 	return &item, nil
 }
 
-func (i *Item) Update(item Item) (*Item, error) {
+func (i *Item) Update(order_id int, code string, item Item) (*Item, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Where("order_id = ?", item.OrderID).Updates(&item)
+	result := db.WithContext(ctx).Where("code = ?", code).Where("order_id", order_id).Updates(&item)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -69,7 +66,7 @@ func (i *Item) Delete(item Item) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	result := db.WithContext(ctx).Delete(&item)
+	result := db.WithContext(ctx).Unscoped().Delete(&item)
 	if result.Error != nil {
 		return result.Error
 	}

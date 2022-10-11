@@ -106,7 +106,7 @@ func (c *Config) CreateOrder(ctx *gin.Context) {
 // @Success     200 {object} utils.JSONResult{data=model.Order,error=object} "Success"
 // @Failure     400 {object} utils.JSONResult{data=object,error=utils.JSONError} "Error"
 func (c *Config) UpdateOrder(ctx *gin.Context) {
-	// TODO: update an order
+	// update an order
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, utils.JSONResult{
