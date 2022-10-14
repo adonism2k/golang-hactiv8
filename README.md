@@ -10,12 +10,15 @@
 
 ## 🧾 Requirements
 
-- gofiber/fiber
-- go-gorm/gorm
-- swaggo/swag
-- go-playground/validator
+- [gofiber/fiber](https://github.com/gofiber/fiber)
+- [gofiber/jwt](https://github.com/gofiber/jwt)
+- [go-gorm/gorm](https://github.com/go-gorm/gorm)
+- [swaggo/swag](https://github.com/swaggo/swag)
+- [swaggo/fiber-swagger](https://github.com/swaggo/fiber-swagger)
+- [golang-jwt/jwt](https://github.com/golang-jwt/jwt)
+- [go-playground/validator](https://github.com/go-playground/validator)
+- [cosmtrek/air](https://github.com/cosmtrek/air) - hot reload
 - crypto/bcrypt
-- cosmtrek/air - hot reload
 
 ## 🔱 Reference
 
