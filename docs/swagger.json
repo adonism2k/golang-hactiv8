@@ -1,0 +1,29 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Ini adalah dokumentasi API Contract untuk tugas Final Project Hactiv8.",
+        "title": "Final Project API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Abdian Rizky",
+            "url": "https://linktr.ee/adonism2k",
+            "email": "dev.abdianrizky@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/",
+    "paths": {},
+    "securityDefinitions": {
+        "": {
+            "description": "ex: \"Bearer \u003ctoken\u003e\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

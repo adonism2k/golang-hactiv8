@@ -17,7 +17,6 @@
 - [swaggo/fiber-swagger](https://github.com/swaggo/fiber-swagger)
 - [golang-jwt/jwt](https://github.com/golang-jwt/jwt)
 - [go-playground/validator](https://github.com/go-playground/validator)
-- [cosmtrek/air](https://github.com/cosmtrek/air) - hot reload
 - crypto/bcrypt
 
 ## 🔱 Reference
@@ -28,22 +27,11 @@
 
 1. **Install package**
 
-   Navigate into your new site’s directory and start it up.
-
    ```shell
     cd final-project
-    go install && swag init -g ./cmd/final-project/main.go
-
+    make up
    ```
 
-2. **Build docker compose.**
+2. **Open the code and start customizing!**
 
-   ```shell
-    docker compose up --build
-   ```
-
-3. **Open the code and start customizing!**
-
-   Your site is now running at http://localhost:8000. You can also see the swagger documentation at http://localhost:8000/swagger/index.html
-
-   > Save your changes and the browser will update in real time!
+   Your API is now running at http://localhost:8000. You can also see the swagger documentation at http://localhost:8000/swagger/index.html
