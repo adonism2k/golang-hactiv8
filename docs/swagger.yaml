@@ -15,7 +15,7 @@ info:
 paths: {}
 securityDefinitions:
   "":
-    description: 'ex: "Bearer <token>"'
+    description: Bearer Token
     in: header
     name: Authorization
     type: apiKey

@@ -5,23 +5,23 @@ import (
 )
 
 type User struct {
-	ID        int       `gorm:"primarykey" json:"id" example:"1"`
-	Username  string    `gorm:"type:varchar(100);not null" json:"customer_name" example:"John Doe"`
-	Age       int       `gorm:"not null" json:"age" example:"2022-10-10T11:52:28.431369Z"`
-	Email     string    `gorm:"not null" json:"email" example:"2022-10-10T11:52:28.431369Z"`
-	Password  string    `gorm:"not null" json:"password" example:"2022-10-10T11:52:28.431369Z"`
-	CreatedAt time.Time `gorm:"autoCreateTime" swaggerignore:"true" json:"-"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime" swaggerignore:"true" json:"-"`
+	ID        int       `gorm:"primarykey"`
+	Username  string    `gorm:"type:varchar(100);not null"`
+	Age       int       `gorm:"not null"`
+	Email     string    `gorm:"not null"`
+	Password  string    `gorm:"not null"`
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }
 
 func (u *User) Register() {
 	// RegisterRequest Model godoc
 	// @Description RegisterRequest Model
 	type Request struct {
-		Age      int    `json:"age" example:"18"`                          // Age
-		Username string `json:"customer_name" example:"adnsm"`             // Customer Name
-		Email    string `json:"email" example:"abdianrizky11@gmail.com"`   // Email
-		Password string `json:"password" example:"bcrypt hashed password"` // Password
+		Age      int    `json:"age" example:"18" validate:"required,number"`                                    // Age
+		Username string `json:"customer_name" example:"adnsm" validate:"required"`                              // Customer Name
+		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email,min=6,max=32"` // Email
+		Password string `json:"password" example:"bcrypt hashed password" validate:"required,min=6,max=32"`     // Password
 	} // @name RegisterRequest
 
 	// RegisterResponse Model godoc
@@ -38,8 +38,8 @@ func (u *User) Login() {
 	// LoginRequest Model godoc
 	// @Description LoginRequest Model
 	type Request struct {
-		Email    string `json:"email" example:"`                           // Email
-		Password string `json:"password" example:"bcrypt hashed password"` // Password
+		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email,min=6,max=32"` // Email
+		Password string `json:"password" example:"bcrypt hashed password" validate:"required,min=6,max=32"`     // Password
 	} // @name LoginRequest
 
 	// LoginResponse Model godoc
@@ -50,20 +50,20 @@ func (u *User) Login() {
 }
 
 func (u *User) Edit() {
-	// EditRequest Model godoc
-	// @Description EditRequest Model
+	// UserEditRequest Model godoc
+	// @Description UserEditRequest Model
 	type Request struct {
-		Username string `json:"customer_name" example:"adnsm"`           // Customer Name
-		Email    string `json:"email" example:"abdianrizky11@gmail.com"` // Email
-	}
+		Username string `json:"customer_name" example:"adnsm" validate:"required"`                              // Customer Name
+		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email,min=6,max=32"` // Email
+	} // @name UserEditRequest
 
-	// EditResponse Model godoc
-	// @Description EditResponse Model
+	// UserEditResponse Model godoc
+	// @Description UserEditResponse Model
 	type Response struct {
 		ID        int       `json:"id" example:"1"`                                   // User ID
 		Username  string    `json:"customer_name" example:"adnsm"`                    // Customer Name
 		Age       int       `json:"age" example:"18"`                                 // Age
 		Email     string    `json:"email" example:"abdianrizky11@gmail.com"`          // Email
 		UpdatedAt time.Time `json:"updated_at" example:"2022-10-10T11:52:28.431369Z"` // Updated At
-	} // @name EditResponse
+	} // @name UserEditResponse
 }

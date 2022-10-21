@@ -27,7 +27,7 @@ const docTemplate = `{
     "paths": {},
     "securityDefinitions": {
         "": {
-            "description": "ex: \"Bearer \u003ctoken\u003e\"",
+            "description": "Bearer Token",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

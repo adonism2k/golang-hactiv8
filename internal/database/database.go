@@ -29,7 +29,7 @@ func Connect() Config {
 		} else {
 			log.Println("Connected to Postgres!")
 
-			err = conn.AutoMigrate(&model.User{})
+			err = conn.AutoMigrate(&model.User{}, &model.Photo{}, &model.Comment{}, &model.SocialMedia{})
 			if err != nil {
 				log.Println("Failed to migrate the Models.")
 				log.Fatal(err)
