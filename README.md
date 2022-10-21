@@ -27,10 +27,10 @@
 
 1. **Install package**
 
-   ```shell
-    cd final-project
-    make up
-   ```
+  ```shell
+  cd final-project
+  make up
+  ```
 
 2. **Open the code and start customizing!**
 
