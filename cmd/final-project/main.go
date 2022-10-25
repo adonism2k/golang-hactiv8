@@ -6,6 +6,7 @@ import (
 	"github.com/adonism2k/golang-hactiv8/api/handlers"
 	"github.com/adonism2k/golang-hactiv8/api/routes"
 	"github.com/adonism2k/golang-hactiv8/internal/database"
+	"github.com/adonism2k/golang-hactiv8/internal/initializers"
 )
 
 // @title          Final Project API
@@ -28,12 +29,15 @@ import (
 // @in header
 // @description Bearer Token
 
-const webPort = ":8000"
-
 func main() {
+	config, err := initializers.LoadConfig(".")
+	if err != nil {
+		log.Fatal("🚀 Could not load environment variables", err)
+	}
+
 	db := database.Connect()
 	handl := handlers.New(db)
 	app := routes.Api(handl)
 
-	log.Fatal(app.Listen(webPort))
+	log.Fatal(app.Listen(":" + config.ServerPort))
 }

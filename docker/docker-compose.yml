@@ -9,8 +9,8 @@ services:
       dockerfile: ./docker/Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      DSN: "host=postgres port=5432 user=root password=root dbname=go_hactiv8 sslmode=disable timezone=UTC connect_timeout=5"
+    env_file:
+      - .env
     networks:
       - go-hactiv8
     deploy:
