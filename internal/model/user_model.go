@@ -45,8 +45,6 @@ func (User) Register() {
 	} // @name RegisterResponse
 }
 
-func (u *User) AuthenticateUser(username)
-
 func (User) Edit() {
 	// UserEditRequest Model godoc
 	// @Description UserEditRequest Model

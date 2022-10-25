@@ -11,26 +11,21 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-// AuthToken struct
-type AuthToken struct {
-	Token string `json:"token"`
-}
-
 // AuthTokenClaim struct
 type AuthTokenClaim struct {
 	jwt.RegisteredClaims
 	User model.User
 }
 
-var JWT_SECRET = []byte(os.Getenv("JWT_SECRET"))	
+var JWT_SECRET = []byte(os.Getenv("JWT_SECRET"))
 
-func GenerateToken(user model.User) (AuthToken, error) {
+func GenerateToken(user model.User) (string, error) {
 	var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
 
 	expired, err := strconv.Atoi(os.Getenv("JWT_EXPIRED"))
 	if err != nil {
 		fmt.Println(err)
-		return AuthToken{}, err
+		return "", err
 	}
 
 	newJWT := jwt.NewWithClaims(JWT_SIGNING_METHOD, AuthTokenClaim{
@@ -43,10 +38,10 @@ func GenerateToken(user model.User) (AuthToken, error) {
 	token, err := newJWT.SignedString(JWT_SECRET)
 	if err != nil {
 		fmt.Println(err)
-		return AuthToken{}, err
+		return "", err
 	}
 
-	return AuthToken{token}, nil
+	return token, nil
 }
 
 func ValidateToken(tokenString string) (model.User, error) {

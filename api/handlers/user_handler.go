@@ -50,6 +50,8 @@ func (h *Config) Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
+
+	return c.Status(http.StatusOK).JSON(Response{token})
 }
 
 func (h *Config) Register(c *fiber.Ctx) error {
