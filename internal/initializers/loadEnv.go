@@ -11,7 +11,7 @@ type Config struct {
 
 	APPName    string `mapstructure:"APP_NAME"`
 	APPUrl     string `mapstructure:"APP_URL"`
-	ServerPort string `mapstructure:"APP_PORT"`
+	ServerPort string `mapstructure:"PORT"`
 
 	JWTSecret  string `mapstructure:"JWT_SECRET"`
 	JWTExpired int    `mapstructure:"JWT_EXPIRED_HOUR"`
