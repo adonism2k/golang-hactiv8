@@ -19,3 +19,9 @@ func New(db database.Config, config initializers.Config) Config {
 		Env:    config,
 	}
 }
+
+// DeleteResponse Model godoc
+// @Description DeleteResponse Model
+type DeleteResponse struct {
+	Message string `json:"message" example:"your account has been successfully deleted"`
+} // @name DeleteResponse

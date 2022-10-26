@@ -7,6 +7,26 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func UserOwner(c *fiber.Ctx) error {
+	user := c.Locals("user").(model.User)
+	params, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "invalid id",
+		})
+	}
+
+	if user.ID == params {
+		return c.Next()
+	}
+
+	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+		"error":   true,
+		"message": "You doesn't have access to this resources",
+	})
+}
+
 func PhotoOwner(c *fiber.Ctx) error {
 	user := c.Locals("user").(model.User)
 	params, err := strconv.Atoi(c.Params("id"))

@@ -28,15 +28,15 @@ func Api(h handlers.Config, Env initializers.Config) *fiber.App {
 	app.Use(middleware.Auth)
 	users := app.Group("/users")
 	{
-		users.Put("/:id", h.UpdateUser)
-		users.Delete("/:id", h.DeleteUser)
+		users.Put("/:id", middleware.UserOwner, h.UpdateUser)
+		users.Delete("/:id", middleware.UserOwner, h.DeleteUser)
 	}
 
 	photos := app.Group("/photos")
 	{
 		photos.Get("/", h.GetPhotos)
 		photos.Post("/", h.CreatePhoto)
-		photos.Put("/:id", middleware.PhotoOwner, h.EditPhoto)
+		photos.Put("/:id", middleware.PhotoOwner, h.UpdatePhoto)
 		photos.Delete("/:id", middleware.PhotoOwner, h.DeletePhoto)
 	}
 

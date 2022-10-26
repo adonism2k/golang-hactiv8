@@ -25,7 +25,53 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users/:id": {
+        "/users/login": {
+            "post": {
+                "description": "Authenticates user and returns JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Login",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/LoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/register": {
+            "post": {
+                "description": "Authenticates user and returns JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Register",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/RegisterResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
             "put": {
                 "security": [
                     {
@@ -74,52 +120,6 @@ const docTemplate = `{
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/DeleteUserResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/login": {
-            "post": {
-                "description": "Authenticates user and returns JWT token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Login",
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/LoginResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/register": {
-            "post": {
-                "description": "Authenticates user and returns JWT token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Register",
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/RegisterResponse"
                         }
                     }
                 }
@@ -173,10 +173,6 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 18
                 },
-                "customer_name": {
-                    "type": "string",
-                    "example": "adnsm"
-                },
                 "email": {
                     "type": "string",
                     "example": "abdianrizky11@gmail.com"
@@ -188,6 +184,10 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string",
                     "example": "2022-10-10T11:52:28.431369Z"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "adnsm"
                 }
             }
         }

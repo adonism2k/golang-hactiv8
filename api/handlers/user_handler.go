@@ -7,7 +7,6 @@ import (
 	"github.com/adonism2k/golang-hactiv8/internal/model"
 	"github.com/adonism2k/golang-hactiv8/internal/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 // Login godoc
@@ -16,7 +15,7 @@ import (
 // @Tags        User
 // @Accept      json
 // @Produce     json
-// @Params      request body handlers.Login.Request true "Login Request"
+// @Param      	request body handlers.Login.Request true "Login Request"
 // @Success     200 {object} handlers.Login.Response "Success"
 // @Router      /users/login [post]
 func (h *Config) Login(c *fiber.Ctx) error {
@@ -74,16 +73,16 @@ func (h *Config) Login(c *fiber.Ctx) error {
 // @Tags        User
 // @Accept      json
 // @Produce     json
-// @Params      request body handlers.Register.Request true "Register Request"
+// @Param      	request body handlers.Register.Request true "Register Request"
 // @Success     200 {object} handlers.Register.Response "Success"
 // @Router      /users/register [post]
 func (h *Config) Register(c *fiber.Ctx) error {
 	// RegisterRequest Model godoc
 	// @Description RegisterRequest Model
 	type Request struct {
-		Age      int    `json:"age" example:"18" validate:"required,number"`
+		Age      int    `json:"age" example:"18" validate:"required,numeric,gte=8"`
 		Username string `json:"username" example:"adnsm" validate:"required"`
-		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email,min=6,max=32"`
+		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email"`
 		Password string `json:"password" example:"bcrypt hashed password" validate:"required,min=6,max=32"`
 	} // @name RegisterRequest
 
@@ -129,28 +128,25 @@ func (h *Config) Register(c *fiber.Ctx) error {
 	})
 }
 
-// UpdateUser godoc
-// @Summary 	UpdateUser
-// @Description Authenticates user and returns JWT token
+// Update User godoc
+// @Summary 	Update User
+// @Description Update the current user data
 // @Tags        User
 // @Accept      json
 // @Produce     json
-// @Params      auth header string true "Authorization"
-// @Params 		id path int true "User ID"
-// @Params      request body handlers.UpdateUser.Request true "UpdateUser Request"
+// @Param		auth header string true "Authorization"
+// @Param		id path int true "User ID"
+// @Param		request body handlers.UpdateUser.Request true "Update User Request"
 // @Security    ApiKeyAuth
 // @Success     200 {object} handlers.UpdateUser.Response "Success"
-// @Router      /users/:id [put]
+// @Router      /users/{id} [put]
 func (h *Config) UpdateUser(c *fiber.Ctx) error {
-	token := c.Locals("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
-
-	user := claims["User"].(model.User)
+	user := c.Locals("user").(model.User)
 
 	// UpdateUserRequest Model godoc
 	// @Description UpdateUserRequest Model
 	type Request struct {
-		Username string `json:"customer_name" example:"adnsm" validate:"required"`
+		Username string `json:"username" example:"adnsm" validate:"required"`
 		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email,min=6,max=32"`
 	} // @name UpdateUserRequest
 
@@ -158,7 +154,7 @@ func (h *Config) UpdateUser(c *fiber.Ctx) error {
 	// @Description UpdateUserResponse Model
 	type Response struct {
 		ID        int       `json:"id" example:"1"`
-		Username  string    `json:"customer_name" example:"adnsm"`
+		Username  string    `json:"username" example:"adnsm"`
 		Age       int       `json:"age" example:"18"`
 		Email     string    `json:"email" example:"abdianrizky11@gmail.com"`
 		UpdatedAt time.Time `json:"updated_at" example:"2022-10-10T11:52:28.431369Z"`
@@ -180,42 +176,33 @@ func (h *Config) UpdateUser(c *fiber.Ctx) error {
 	userEdit.Username = body.Username
 	userEdit.Email = body.Email
 
-	user = h.Models.User.Update(user, userEdit)
+	newUser := h.Models.User.Update(user.ID, userEdit)
 
 	return c.Status(http.StatusOK).JSON(Response{
-		ID:        user.ID,
-		Username:  user.Username,
-		Age:       user.Age,
-		Email:     user.Email,
-		UpdatedAt: user.UpdatedAt,
+		ID:        newUser.ID,
+		Username:  newUser.Username,
+		Age:       newUser.Age,
+		Email:     newUser.Email,
+		UpdatedAt: newUser.UpdatedAt,
 	})
 }
 
-// UpdateUser godoc
-// @Summary 	UpdateUser
-// @Description Authenticates user and returns JWT token
+// Delete User godoc
+// @Summary 	Delete User
+// @Description Delete the current user account
 // @Tags        User
 // @Accept      json
 // @Produce     json
-// @Params 		id path int true "User ID"
+// @Param 		id path int true "User ID"
 // @Security    ApiKeyAuth
-// @Success     200 {object} handlers.DeleteUser.Response "Success"
-// @Router      /users/:id [delete]
+// @Success     200 {object} handlers.DeleteResponse "Success"
+// @Router      /users/{id} [delete]
 func (h *Config) DeleteUser(c *fiber.Ctx) error {
-	token := c.Locals("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
+	user := c.Locals("user").(model.User)
 
-	user := claims["User"].(model.User)
-
-	// DeleteUserResponse Model godoc
-	// @Description DeleteUserResponse Model
-	type Response struct {
-		Message string `json:"message" example:"your account has been successfully deleted"`
-	} // @name DeleteUserResponse
-
-	if ok := h.Models.User.Delete(user); !ok {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": true, "message": "cannot delete user"})
+	if err := h.Models.User.Delete(user); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": true, "message": err.Error()})
 	}
 
-	return c.Status(http.StatusOK).JSON(Response{Message: "your account has been successfully deleted"})
+	return c.Status(http.StatusOK).JSON(DeleteResponse{Message: "your account has been successfully deleted"})
 }

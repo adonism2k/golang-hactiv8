@@ -5,6 +5,8 @@ import (
 	"log"
 	"strings"
 	"time"
+
+	"gorm.io/gorm/clause"
 )
 
 type User struct {
@@ -17,16 +19,14 @@ type User struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }
 
-// func (u *User) BeforeCreate() error {
-// 	u.CreatedAt = time.Now()
-// 	u.UpdatedAt = time.Now()
-// 	return nil
-// }
-
-// func (u *User) BeforeUpdate() error {
-// 	u.UpdatedAt = time.Now()
-// 	return nil
-// }
+// UserPhotoResponse Model godoc
+// @Description UserPhotoResponse Model
+type UserPhoto struct {
+	ID       int    `json:"id" example:"1"`
+	Age      int    `json:"age" example:"18"`
+	Username string `json:"username" example:"adnsm"`
+	Email    string `json:"email" example:"abdianrizky11@gmail.com"`
+} // @name UserPhotoResponse
 
 func (u User) FindByEmail(email string) User {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -59,13 +59,14 @@ func (u *User) Create(user User) User {
 	return user
 }
 
-func (u *User) Update(oldUser User, newUser User) User {
+func (u *User) Update(id int, newUser User) User {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
 	tx := db.WithContext(ctx).Begin()
 
-	result := tx.Model(&u).First(oldUser).Updates(newUser)
+	var user User
+	result := tx.Model(&user).Clauses(clause.Returning{}).Where("id = ?", id).Updates(newUser)
 	if result.Error != nil {
 		log.Println(result.Error)
 		tx.Rollback()
@@ -74,10 +75,10 @@ func (u *User) Update(oldUser User, newUser User) User {
 
 	tx.Commit()
 
-	return newUser
+	return user
 }
 
-func (u *User) Delete(user User) bool {
+func (u *User) Delete(user User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -87,10 +88,10 @@ func (u *User) Delete(user User) bool {
 	if result.Error != nil {
 		log.Println(result.Error)
 		tx.Rollback()
-		return false
+		return result.Error
 	}
 
 	tx.Commit()
 
-	return true
+	return nil
 }
