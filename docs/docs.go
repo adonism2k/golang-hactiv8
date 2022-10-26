@@ -25,6 +25,522 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/comments/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get the current Comments data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get All Comments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Comment"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a Comment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Create Comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Create Comment Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateCommentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/CreateCommentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/comments/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update the current Comment data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Update Comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Comment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Comment Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateCommentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateCommentResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a Comment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Delete Comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/DeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/photos/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get All Photos",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Photo"
+                ],
+                "summary": "Get All Photos",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PhotoResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a Photo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Photo"
+                ],
+                "summary": "Create Photo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Create Photo Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PhotoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/CreatePhotoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/photos/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update the current Photo data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Photo"
+                ],
+                "summary": "Update Photo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Photo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Photo Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PhotoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/UpdatePhotoResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a photo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Photo"
+                ],
+                "summary": "Delete Photo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Photo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/DeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/socialmedias/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get the current Social Media data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Social Media"
+                ],
+                "summary": "Get All Social Media",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Social"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a Social Media",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Social Media"
+                ],
+                "summary": "Create Social Media",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Create Social Media Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SocialMediaRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/CreateSocialMediaResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/socialmedias/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update the current Social Media data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Social Media"
+                ],
+                "summary": "Update Social Media",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Social Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Social Media Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SocialMediaRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateSocialMediaResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a Social Media",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Social Media"
+                ],
+                "summary": "Delete Social Media",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Social Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/DeleteResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users/login": {
             "post": {
                 "description": "Authenticates user and returns JWT token",
@@ -38,6 +554,17 @@ const docTemplate = `{
                     "User"
                 ],
                 "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Login Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LoginRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -61,6 +588,17 @@ const docTemplate = `{
                     "User"
                 ],
                 "summary": "Register",
+                "parameters": [
+                    {
+                        "description": "Register Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/RegisterRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -78,7 +616,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Authenticates user and returns JWT token",
+                "description": "Update the current user data",
                 "consumes": [
                     "application/json"
                 ],
@@ -88,7 +626,32 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "UpdateUser",
+                "summary": "Update User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "auth",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update User Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateUserRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -104,7 +667,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Authenticates user and returns JWT token",
+                "description": "Delete the current user account",
                 "consumes": [
                     "application/json"
                 ],
@@ -114,12 +677,21 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "UpdateUser",
+                "summary": "Delete User",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/DeleteUserResponse"
+                            "$ref": "#/definitions/DeleteResponse"
                         }
                     }
                 }
@@ -127,12 +699,127 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "DeleteUserResponse": {
+        "CreateCommentRequest": {
+            "type": "object",
+            "required": [
+                "message",
+                "photo_id"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 3
+                },
+                "photo_id": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "CreateCommentResponse": {
+            "type": "object",
+            "properties": {
+                "create_at": {
+                    "type": "string",
+                    "example": "2022-10-10T11:52:28.431369Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "message": {
+                    "type": "string",
+                    "example": "This is a comment"
+                },
+                "photo_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "CreatePhotoResponse": {
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string",
+                    "example": "my first photo"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-10-10T11:52:28.431369Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "photo_url": {
+                    "type": "string",
+                    "example": "https://images.unsplash.com"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "First Photo"
+                }
+            }
+        },
+        "CreateSocialMediaResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2022-10-10T11:52:28.431369Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Instagram"
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://instagram.com"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "DeleteResponse": {
+            "description": "DeleteResponse Model",
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string",
                     "example": "your account has been successfully deleted"
+                }
+            }
+        },
+        "LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 6,
+                    "example": "abdianrizky11@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 6,
+                    "example": "bcrypt hashed password"
                 }
             }
         },
@@ -142,6 +829,95 @@ const docTemplate = `{
                 "token": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                }
+            }
+        },
+        "PhotoRequest": {
+            "description": "PhotoRequest Model",
+            "type": "object",
+            "required": [
+                "photo_url",
+                "title"
+            ],
+            "properties": {
+                "caption": {
+                    "type": "string",
+                    "example": "my first photo"
+                },
+                "photo_url": {
+                    "type": "string",
+                    "example": "https://images.unsplash.com"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "First Photo"
+                }
+            }
+        },
+        "PhotoResponse": {
+            "description": "PhotoResponse Model",
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string",
+                    "example": "my first photo"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2017-07-22'T'16:28:55.444"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "photo_url": {
+                    "type": "string",
+                    "example": "https://images.unsplash.com"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "First Photo"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2017-07-22'T'16:28:55.444"
+                },
+                "user": {
+                    "$ref": "#/definitions/User"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "RegisterRequest": {
+            "type": "object",
+            "required": [
+                "age",
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "age": {
+                    "type": "integer",
+                    "minimum": 8,
+                    "example": 18
+                },
+                "email": {
+                    "type": "string",
+                    "example": "abdianrizky11@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 6,
+                    "example": "bcrypt hashed password"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "adnsm"
                 }
             }
         },
@@ -159,6 +935,162 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "username": {
+                    "type": "string",
+                    "example": "adnsm"
+                }
+            }
+        },
+        "Social": {
+            "description": "Social Media Model",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2017-07-22'T'16:28:55.444"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Facebook"
+                },
+                "social_media_url": {
+                    "type": "string",
+                    "example": "https://images.unsplash.com"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2017-07-22'T'16:28:55.444"
+                },
+                "user": {
+                    "$ref": "#/definitions/User"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "SocialMediaRequest": {
+            "description": "Social Media Request Model",
+            "type": "object",
+            "required": [
+                "name",
+                "social_media_url"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Facebook"
+                },
+                "social_media_url": {
+                    "type": "string",
+                    "example": "https://images.unsplash.com"
+                }
+            }
+        },
+        "UpdateCommentRequest": {
+            "type": "object",
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "UpdateCommentResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "message": {
+                    "type": "string",
+                    "example": "This is a comment"
+                },
+                "photo_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-10-10T11:52:28.431369Z"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "UpdatePhotoResponse": {
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string",
+                    "example": "my first photo"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "photo_url": {
+                    "type": "string",
+                    "example": "https://images.unsplash.com"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "First Photo"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-10-10T11:52:28.431369Z"
+                }
+            }
+        },
+        "UpdateSocialMediaResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Instagram"
+                },
+                "social_media_url": {
+                    "type": "string",
+                    "example": "https://instagram.com"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2022-10-10T11:52:28.431369Z"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "UpdateUserRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 6,
+                    "example": "abdianrizky11@gmail.com"
                 },
                 "username": {
                     "type": "string",
@@ -188,6 +1120,59 @@ const docTemplate = `{
                 "username": {
                     "type": "string",
                     "example": "adnsm"
+                }
+            }
+        },
+        "User": {
+            "description": "User Model",
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "admin@localhost"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "username": {
+                    "type": "string",
+                    "example": "admin"
+                }
+            }
+        },
+        "model.Comment": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2017-07-22'T'16:28:55.444"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "message": {
+                    "type": "string",
+                    "example": "This is a comment"
+                },
+                "photo": {
+                    "$ref": "#/definitions/PhotoResponse"
+                },
+                "photo_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2017-07-22'T'16:28:55.444"
+                },
+                "user": {
+                    "$ref": "#/definitions/User"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         }

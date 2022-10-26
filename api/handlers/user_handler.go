@@ -49,10 +49,7 @@ func (h *Config) Login(c *fiber.Ctx) error {
 
 	user := h.Models.User.FindByEmail(body.Email)
 	if user.ID == 0 {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":   true,
-			"message": "user not found",
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": true, "message": "Invalid email or Password"})
 	}
 
 	if err := utils.VerifyPassword(user.Password, body.Password); err != nil {
@@ -80,7 +77,7 @@ func (h *Config) Register(c *fiber.Ctx) error {
 	// RegisterRequest Model godoc
 	// @Description RegisterRequest Model
 	type Request struct {
-		Age      int    `json:"age" example:"18" validate:"required,numeric,gte=8"`
+		Age      int    `json:"age" example:"18" validate:"required,number,gte=8"`
 		Username string `json:"username" example:"adnsm" validate:"required"`
 		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email"`
 		Password string `json:"password" example:"bcrypt hashed password" validate:"required,min=6,max=32"`
@@ -107,6 +104,12 @@ func (h *Config) Register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errors)
 	}
 
+	// Check if there is an existing user with the same email
+	user := h.Models.User.FindByEmail(body.Email)
+	if user.ID != 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": true, "message": "email already exists"})
+	}
+
 	password, err := utils.HashPassword(body.Password)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": true, "message": err.Error()})
@@ -118,7 +121,7 @@ func (h *Config) Register(c *fiber.Ctx) error {
 	newUser.Email = body.Email
 	newUser.Password = password
 
-	user := h.Models.User.Create(newUser)
+	user = h.Models.User.Create(newUser)
 
 	return c.Status(http.StatusOK).JSON(Response{
 		ID:       user.ID,

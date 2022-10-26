@@ -5,20 +5,19 @@ import (
 	"time"
 
 	"github.com/adonism2k/golang-hactiv8/internal/model"
+	"github.com/adonism2k/golang-hactiv8/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
-// Get All Photo godoc
-// @Summary 	Get All Photo
-// @Description Get the current Photo data
+// Get All Photos godoc
+// @Summary 	Get All Photos
+// @Description Get All Photos
 // @Tags        Photo
 // @Accept      json
 // @Produce     json
 // @Security    ApiKeyAuth
 // @Param		auth header string true "Authorization"
-// @Param		id path int true "Photo ID"
-// @Param		request body model.PhotoRequest true "Get Photo Request"
-// @Success     200 {object} model.Photo "Success"
+// @Success     200 {array} model.Photo "Success"
 // @Router      /photos/ [get]
 func (h *Config) GetPhotos(c *fiber.Ctx) error {
 	photos, err := h.Models.Photo.All()
@@ -34,13 +33,12 @@ func (h *Config) GetPhotos(c *fiber.Ctx) error {
 
 // Create Photo godoc
 // @Summary 	Create Photo
-// @Description Create the current Photo data
+// @Description Create a Photo
 // @Tags        Photo
 // @Accept      json
 // @Produce     json
 // @Security    ApiKeyAuth
 // @Param		auth header string true "Authorization"
-// @Param		id path int true "Photo ID"
 // @Param		request body model.PhotoRequest true "Create Photo Request"
 // @Success     200 {object} handlers.CreatePhoto.Response "Success"
 // @Router      /photos/ [post]
@@ -64,6 +62,11 @@ func (h *Config) CreatePhoto(c *fiber.Ctx) error {
 			"error":   true,
 			"message": err.Error(),
 		})
+	}
+
+	errors := utils.ValidateStruct(body)
+	if errors != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(errors)
 	}
 
 	var newPhoto model.Photo
@@ -113,8 +116,8 @@ func (h *Config) UpdatePhoto(c *fiber.Ctx) error {
 		UpdatedAt time.Time `json:"updated_at" example:"2022-10-10T11:52:28.431369Z"`
 	} // @name UpdatePhotoResponse
 
-	var body model.PhotoRequest
-	err := c.BodyParser(&body)
+	// check if the owner of the photo is the user
+	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
@@ -122,12 +125,41 @@ func (h *Config) UpdatePhoto(c *fiber.Ctx) error {
 		})
 	}
 
+	photo, err := h.Models.Photo.Find(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	if photo.UserID != user.ID {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error":   true,
+			"message": "Forbidden",
+		})
+	}
+
+	var body model.PhotoRequest
+	err = c.BodyParser(&body)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	errors := utils.ValidateStruct(body)
+	if errors != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(errors)
+	}
+
 	var newPhoto model.Photo
 	newPhoto.Title = body.Title
 	newPhoto.Caption = body.Caption
 	newPhoto.Url = body.Url
 
-	photo, err := h.Models.Photo.Update(user.ID, newPhoto)
+	photo, err = h.Models.Photo.Update(id, newPhoto)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,
@@ -144,22 +176,38 @@ func (h *Config) UpdatePhoto(c *fiber.Ctx) error {
 	})
 }
 
-// Update Photo godoc
-// @Summary 	Update Photo
-// @Description Delete the current user photo
-// @Tags        User
+// Delete Photo godoc
+// @Summary 	Delete Photo
+// @Description Delete a photo
+// @Tags        Photo
 // @Accept      json
 // @Produce     json
-// @Param 		id path int true "User ID"
+// @Param 		id path int true "Photo ID"
 // @Security    ApiKeyAuth
 // @Success     200 {object} handlers.DeleteResponse "Success"
-// @Router      /users/{id} [delete]
+// @Router      /photos/{id} [delete]
 func (h *Config) DeletePhoto(c *fiber.Ctx) error {
+	user := c.Locals("user").(model.User)
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
 			"message": err.Error(),
+		})
+	}
+
+	photo, err := h.Models.Photo.Find(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	if photo.UserID != user.ID {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error":   true,
+			"message": "Forbidden",
 		})
 	}
 

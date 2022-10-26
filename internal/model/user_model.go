@@ -9,24 +9,17 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// User Model godoc
+// @Description User Model
 type User struct {
-	ID        int       `gorm:"primarykey"`
-	Username  string    `gorm:"not null,uniqueIndex"`
-	Age       int       `gorm:"not null"`
-	Email     string    `gorm:"not null,uniqueIndex"`
-	Password  string    `gorm:"not null"`
-	CreatedAt time.Time `gorm:"autoCreateTime"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime"`
-}
-
-// UserPhotoResponse Model godoc
-// @Description UserPhotoResponse Model
-type UserPhoto struct {
-	ID       int    `json:"id" example:"1"`
-	Age      int    `json:"age" example:"18"`
-	Username string `json:"username" example:"adnsm"`
-	Email    string `json:"email" example:"abdianrizky11@gmail.com"`
-} // @name UserPhotoResponse
+	ID        int       `gorm:"primarykey" json:"id" example:"1"`
+	Username  string    `gorm:"not null;uniqueIndex" json:"username" example:"admin"`
+	Email     string    `gorm:"not null;uniqueIndex" json:"email" example:"admin@localhost"`
+	Age       int       `gorm:"not null" json:"-" swaggerignore:"true"`
+	Password  string    `gorm:"not null" json:"-" swaggerignore:"true"`
+	CreatedAt time.Time `gorm:"autoCreateTime" json:"-" swaggerignore:"true"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"-" swaggerignore:"true"`
+} // @name User
 
 func (u User) FindByEmail(email string) User {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)

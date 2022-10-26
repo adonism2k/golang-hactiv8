@@ -43,6 +43,20 @@ func (p *Photo) All() ([]*Photo, error) {
 	return photos, nil
 }
 
+func (p *Photo) Find(id int) (*Photo, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	var photo Photo
+	result := db.WithContext(ctx).First(&photo, id)
+	if result.Error != nil {
+		log.Println(result.Error)
+		return nil, result.Error
+	}
+
+	return &photo, nil
+}
+
 func (p *Photo) Create(photo Photo) (*Photo, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -86,7 +100,6 @@ func (p *Photo) Delete(id int) error {
 
 	tx := db.WithContext(ctx).Begin()
 
-	// result := tx.Select("Comments").Unscoped().Delete(&photo)
 	result := tx.Select("Comments").Delete(&Photo{}, id)
 	if result.Error != nil {
 		log.Println(result.Error)

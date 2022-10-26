@@ -5,7 +5,6 @@ go 1.19
 require (
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/gofiber/fiber/v2 v2.39.0
-	github.com/gofiber/jwt/v3 v3.3.3
 	github.com/gofiber/swagger v0.1.6
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/spf13/viper v1.13.0

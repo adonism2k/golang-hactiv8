@@ -25,35 +25,34 @@ func Api(h handlers.Config, Env initializers.Config) *fiber.App {
 	app.Post("/users/login", h.Login)
 	app.Post("/users/register", h.Register)
 
-	app.Use(middleware.Auth)
-	users := app.Group("/users")
+	users := app.Group("/users", middleware.Auth)
 	{
 		users.Put("/:id", middleware.UserOwner, h.UpdateUser)
 		users.Delete("/:id", middleware.UserOwner, h.DeleteUser)
 	}
 
-	photos := app.Group("/photos")
+	photos := app.Group("/photos", middleware.Auth)
 	{
 		photos.Get("/", h.GetPhotos)
 		photos.Post("/", h.CreatePhoto)
-		photos.Put("/:id", middleware.PhotoOwner, h.UpdatePhoto)
-		photos.Delete("/:id", middleware.PhotoOwner, h.DeletePhoto)
+		photos.Put("/:id", h.UpdatePhoto)
+		photos.Delete("/:id", h.DeletePhoto)
 	}
 
-	comments := app.Group("/comments")
+	comments := app.Group("/comments", middleware.Auth)
 	{
 		comments.Get("/", h.GetComments)
 		comments.Post("/", h.CreateComment)
-		comments.Put("/:id", middleware.CommentOwner, h.EditComment)
-		comments.Delete("/:id", middleware.CommentOwner, h.DeleteComment)
+		comments.Put("/:id", h.UpdateComment)
+		comments.Delete("/:id", h.DeleteComment)
 	}
 
-	social := app.Group("/socialmedias")
+	social := app.Group("/socialmedias", middleware.Auth)
 	{
 		social.Get("/", h.GetSocialMedias)
 		social.Post("/", h.CreateSocialMedia)
-		social.Put("/:id", middleware.SocialOwner, h.EditSocialMedia)
-		social.Delete("/:id", middleware.SocialOwner, h.DeleteSocialMedia)
+		social.Put("/:id", h.UpdateSocialMedia)
+		social.Delete("/:id", h.DeleteSocialMedia)
 	}
 
 	return app
