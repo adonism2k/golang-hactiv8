@@ -10,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func Api(h handlers.Config, Env initializers.Config) *fiber.App {
@@ -27,36 +26,9 @@ func Api(h handlers.Config, Env initializers.Config) *fiber.App {
 	app.Post("/users/login", h.Login)
 	app.Post("/users/register", h.Register)
 
-	// app.Use(func(c *fiber.Ctx) error {
-	// 	token := c.Get("Authorization")
-	// 	log.Println(token)
-	// 	if token == "" {
-	// 		log.Println("🚀 Token is empty")
-	// 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-	// 			"message": "Unauthorized",
-	// 		})
-	// 	}
-	// 	token = strings.Replace(token, "Bearer ", "", 1)
-	// 	log.Println(token)
-
-	// 	user, err := utils.ValidateToken(token, Env.JWTSecret)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-	// 			"message": "Unauthorized",
-	// 		})
-	// 	}
-
-	// 	c.Locals("user", user)
-	// 	return c.Next()
-	// })
-
-	app.Use(middleware.JWTProtected)
+	app.Use(middleware.Auth)
 	app.Get("/health", func(c *fiber.Ctx) error {
-		token := c.Locals("user").(*jwt.Token)
-		claims := token.Claims.(jwt.MapClaims)
-
-		user := claims["User"].(model.User)
+		user := c.Locals("user").(model.User)
 
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"message": "OK",
@@ -95,10 +67,4 @@ func Api(h handlers.Config, Env initializers.Config) *fiber.App {
 	}
 
 	return app
-}
-
-func JWTError(c *fiber.Ctx, err error) error {
-	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-		"error": "Unauthorized",
-	})
 }

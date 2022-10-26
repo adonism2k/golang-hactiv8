@@ -54,7 +54,7 @@ func ValidateToken(token string, secretKey string) (model.User, error) {
 		return model.User{}, errors.New("invalid token")
 	}
 
-	fmt.Println("TOKEN is:", parsedToken.Valid)
+	log.Println("TOKEN is valid:", parsedToken.Valid)
 
 	if claims, ok := parsedToken.Claims.(*AuthTokenClaim); ok && parsedToken.Valid {
 		return claims.User, nil
