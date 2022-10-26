@@ -34,6 +34,19 @@ func (u User) FindByEmail(email string) User {
 	return u
 }
 
+func (u User) FindByUsername(username string) User {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	result := db.WithContext(ctx).First(&u, "username = ?", strings.ToLower(username))
+	if result.Error != nil {
+		log.Println(result.Error)
+		return User{}
+	}
+
+	return u
+}
+
 func (u *User) Create(user User) User {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()

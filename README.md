@@ -11,7 +11,6 @@
 ## 🧾 Requirements
 
 - [gofiber/fiber](https://github.com/gofiber/fiber)
-- [gofiber/jwt](https://github.com/gofiber/jwt)
 - [go-gorm/gorm](https://github.com/go-gorm/gorm)
 - [swaggo/swag](https://github.com/swaggo/swag)
 - [swaggo/fiber-swagger](https://github.com/swaggo/fiber-swagger)
@@ -22,6 +21,7 @@
 ## 🔱 Reference
 
 - [Github Link](https://github.com/adonism2k/golang-hactiv8/tree/final-project)
+- [API Collection](https://www.getpostman.com/collections/e768d3db6c1b271f6a31)
 
 ## 🚀 Quick start
 

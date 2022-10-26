@@ -110,17 +110,26 @@ func (h *Config) Register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": true, "message": "email already exists"})
 	}
 
+	// Check if there is an existing user with the same username
+	user = h.Models.User.FindByUsername(body.Username)
+	if user.ID != 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": true, "message": "username already exists"})
+	}
+
+	// Hash the password
 	password, err := utils.HashPassword(body.Password)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": true, "message": err.Error()})
 	}
 
+	// Create the user
 	var newUser model.User
 	newUser.Age = body.Age
 	newUser.Username = body.Username
 	newUser.Email = body.Email
 	newUser.Password = password
 
+	// Save the user
 	user = h.Models.User.Create(newUser)
 
 	return c.Status(http.StatusOK).JSON(Response{

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/adonism2k/golang-hactiv8/api/handlers"
@@ -39,5 +40,5 @@ func main() {
 	handl := handlers.New(db, config)
 	app := routes.Api(handl, config)
 
-	log.Fatal(app.Listen(":" + config.ServerPort))
+	log.Fatal(app.Listen(fmt.Sprintf("%s:%s", config.APPUrl, config.ServerPort)))
 }
