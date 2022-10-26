@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func IsPhotoOwner(c *fiber.Ctx) error {
+func PhotoOwner(c *fiber.Ctx) error {
 	user := c.Locals("user").(model.User)
 	params, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
@@ -32,7 +32,7 @@ func IsPhotoOwner(c *fiber.Ctx) error {
 	})
 }
 
-func IsCommentOwner(c *fiber.Ctx) error {
+func CommentOwner(c *fiber.Ctx) error {
 	user := c.Locals("user").(model.User)
 	params, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
@@ -57,7 +57,7 @@ func IsCommentOwner(c *fiber.Ctx) error {
 	})
 }
 
-func IsSocialOwner(c *fiber.Ctx) error {
+func SocialOwner(c *fiber.Ctx) error {
 	user := c.Locals("user").(model.User)
 	params, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
