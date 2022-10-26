@@ -1,14 +1,17 @@
 package model
 
 import (
+	"context"
+	"log"
+	"strings"
 	"time"
 )
 
 type User struct {
 	ID        int       `gorm:"primarykey"`
-	Username  string    `gorm:"not null"`
+	Username  string    `gorm:"not null,uniqueIndex"`
 	Age       int       `gorm:"not null"`
-	Email     string    `gorm:"not null"`
+	Email     string    `gorm:"not null,uniqueIndex"`
 	Password  string    `gorm:"not null"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
@@ -25,41 +28,69 @@ type User struct {
 // 	return nil
 // }
 
-func (User) Register() {
-	// RegisterRequest Model godoc
-	// @Description RegisterRequest Model
-	type Request struct {
-		Age      int    `json:"age" example:"18" validate:"required,number"`
-		Username string `json:"customer_name" example:"adnsm" validate:"required"`
-		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email,min=6,max=32"`
-		Password string `json:"password" example:"bcrypt hashed password" validate:"required,min=6,max=32"`
-	} // @name RegisterRequest
+func (u User) FindByEmail(email string) User {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
 
-	// RegisterResponse Model godoc
-	// @Description RegisterResponse Model
-	type Response struct {
-		ID       int    `json:"id" example:"1"`
-		Age      int    `json:"age" example:"18"`
-		Username string `json:"customer_name" example:"adnsm"`
-		Email    string `json:"email" example:"abdianrizky11@gmail.com"`
-	} // @name RegisterResponse
+	result := db.WithContext(ctx).First(&u, "email = ?", strings.ToLower(email))
+	if result.Error != nil {
+		log.Println(result.Error)
+		return User{}
+	}
+
+	return u
 }
 
-func (User) Edit() {
-	// UserEditRequest Model godoc
-	// @Description UserEditRequest Model
-	type Request struct {
-		Username string `json:"customer_name" example:"adnsm" validate:"required"`
-		Email    string `json:"email" example:"abdianrizky11@gmail.com" validate:"required,email,min=6,max=32"`
-	} // @name UserEditRequest
+func (u *User) Create(user User) User {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
 
-	// UserEditResponse Model godoc
-	// @Description UserEditResponse Model
-	type Response struct {
-		ID        int       `json:"id" example:"1"`
-		Username  string    `json:"customer_name" example:"adnsm"`
-		Age       int       `json:"age" example:"18"`
-		Email     string    `json:"email" example:"abdianrizky11@gmail.com"`
-		UpdatedAt time.Time `json:"updated_at" example:"2022-10-10T11:52:28.431369Z"`
-	} // @name UserEditResponse
+	tx := db.WithContext(ctx).Begin()
+
+	result := tx.Create(&user)
+	if result.Error != nil {
+		log.Println(result.Error)
+		tx.Rollback()
+		return User{}
+	}
+
+	tx.Commit()
+
+	return user
+}
+
+func (u *User) Update(oldUser User, newUser User) User {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	tx := db.WithContext(ctx).Begin()
+
+	result := tx.Model(&u).First(oldUser).Updates(newUser)
+	if result.Error != nil {
+		log.Println(result.Error)
+		tx.Rollback()
+		return User{}
+	}
+
+	tx.Commit()
+
+	return newUser
+}
+
+func (u *User) Delete(user User) bool {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	tx := db.WithContext(ctx).Begin()
+
+	result := tx.Delete(&user)
+	if result.Error != nil {
+		log.Println(result.Error)
+		tx.Rollback()
+		return false
+	}
+
+	tx.Commit()
+
+	return true
 }

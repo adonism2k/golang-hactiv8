@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
+	"github.com/adonism2k/golang-hactiv8/internal/initializers"
 	"github.com/adonism2k/golang-hactiv8/internal/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,13 +18,13 @@ type Config struct {
 
 var count uint8
 
-func Connect() Config {
+func Connect(config initializers.Config) Config {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta connect_timeout=5",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PORT"),
+		config.DBHost,
+		config.DBUser,
+		config.DBPassword,
+		config.DBName,
+		config.DBPort,
 	)
 
 	for {
@@ -47,7 +47,7 @@ func Connect() Config {
 			return Config{DB: conn}
 		}
 
-		if count > 5 {
+		if count > 10 {
 			log.Println("Failed to connect to Postgres. Exiting...")
 			log.Println(err)
 			return Config{}

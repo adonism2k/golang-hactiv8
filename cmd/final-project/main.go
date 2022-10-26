@@ -32,12 +32,12 @@ import (
 func main() {
 	config, err := initializers.LoadConfig(".")
 	if err != nil {
-		log.Fatal("🚀 Could not load environment variables", err)
+		log.Fatal("🚀 Could not load environment variables ", err)
 	}
 
-	db := database.Connect()
-	handl := handlers.New(db)
-	app := routes.Api(handl)
+	db := database.Connect(config)
+	handl := handlers.New(db, config)
+	app := routes.Api(handl, config)
 
 	log.Fatal(app.Listen(":" + config.ServerPort))
 }

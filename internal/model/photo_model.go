@@ -10,9 +10,9 @@ import (
 type Photo struct {
 	ID        int       `gorm:"primarykey" json:"id" example:"1"`
 	Title     string    `gorm:"type:varchar(100);not null" json:"title" example:"First Photo"`
-	Caption   int       `gorm:"not null" json:"my first photo"`
+	Caption   string    `gorm:"not null" json:"my first photo"`
 	PhotoUrl  string    `gorm:"not null" json:"https://images.unsplash.com"`
-	UserID    string    `gorm:"not null" json:"user_id" example:"1"`
+	UserID    int       `gorm:"not null" json:"user_id" example:"1"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at" example:"2017-07-22'T'16:28:55.444"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at" example:"2017-07-22'T'16:28:55.444"`
 	User      User

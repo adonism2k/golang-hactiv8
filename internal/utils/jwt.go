@@ -3,8 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"os"
-	"strconv"
+	"log"
 	"time"
 
 	"github.com/adonism2k/golang-hactiv8/internal/model"
@@ -17,52 +16,47 @@ type AuthTokenClaim struct {
 	User model.User
 }
 
-var JWT_SECRET = []byte(os.Getenv("JWT_SECRET"))
+var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
 
-func GenerateToken(user model.User) (string, error) {
-	var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
-
-	expired, err := strconv.Atoi(os.Getenv("JWT_EXPIRED"))
-	if err != nil {
-		fmt.Println(err)
-		return "", err
-	}
-
-	newJWT := jwt.NewWithClaims(JWT_SIGNING_METHOD, AuthTokenClaim{
+func GenerateToken(user model.User, ttl time.Duration, secretKey string) (string, error) {
+	newJWT := jwt.NewWithClaims(JWT_SIGNING_METHOD, &AuthTokenClaim{
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(expired))),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(ttl * time.Hour)),
 		},
 		User: user,
 	})
 
-	token, err := newJWT.SignedString(JWT_SECRET)
+	token, err := newJWT.SignedString([]byte(secretKey))
 	if err != nil {
 		fmt.Println(err)
 		return "", err
 	}
 
-	return token, nil
+	return string(token), nil
 }
 
-func ValidateToken(tokenString string) (model.User, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &AuthTokenClaim{}, func(token *jwt.Token) (interface{}, error) {
-		return JWT_SECRET, nil
+func ValidateToken(token string, secretKey string) (model.User, error) {
+	parsedToken, err := jwt.ParseWithClaims(token, &AuthTokenClaim{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
+			log.Println(err)
 			return model.User{}, errors.New("signature invalid")
 		}
+		log.Println(err)
 		return model.User{}, errors.New("could not parse the auth token")
 	}
 
-	if !token.Valid {
+	if !parsedToken.Valid {
+		log.Println(err)
 		return model.User{}, errors.New("invalid token")
 	}
 
-	fmt.Println("TOKEN is:", token.Valid)
+	fmt.Println("TOKEN is:", parsedToken.Valid)
 
-	if claims, ok := token.Claims.(*AuthTokenClaim); ok && token.Valid {
+	if claims, ok := parsedToken.Claims.(*AuthTokenClaim); ok && parsedToken.Valid {
 		return claims.User, nil
 	}
 

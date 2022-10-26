@@ -1,4 +1,50 @@
 basePath: /
+definitions:
+  DeleteUserResponse:
+    properties:
+      message:
+        example: your account has been successfully deleted
+        type: string
+    type: object
+  LoginResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+    type: object
+  RegisterResponse:
+    properties:
+      age:
+        example: 18
+        type: integer
+      email:
+        example: abdianrizky11@gmail.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      username:
+        example: adnsm
+        type: string
+    type: object
+  UpdateUserResponse:
+    properties:
+      age:
+        example: 18
+        type: integer
+      customer_name:
+        example: adnsm
+        type: string
+      email:
+        example: abdianrizky11@gmail.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      updated_at:
+        example: "2022-10-10T11:52:28.431369Z"
+        type: string
+    type: object
 host: localhost:8000
 info:
   contact:
@@ -12,7 +58,70 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Final Project API
   version: "1.0"
-paths: {}
+paths:
+  /users/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Authenticates user and returns JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/DeleteUserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: UpdateUser
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Authenticates user and returns JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/UpdateUserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: UpdateUser
+      tags:
+      - User
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates user and returns JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/LoginResponse'
+      summary: Login
+      tags:
+      - User
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates user and returns JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/RegisterResponse'
+      summary: Register
+      tags:
+      - User
 securityDefinitions:
   "":
     description: Bearer Token
