@@ -22,6 +22,8 @@
 
 - [Github Link](https://github.com/adonism2k/golang-hactiv8/tree/final-project)
 - [API Collection](https://www.getpostman.com/collections/e768d3db6c1b271f6a31)
+- Production API: https://go-hactiv8.up.railway.app/
+- Swagger Documentation: https://go-hactiv8.up.railway.app/swagger/index.html
 
 ## 🚀 Quick start
 

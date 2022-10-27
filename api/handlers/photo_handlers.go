@@ -121,7 +121,7 @@ func (h *Config) UpdatePhoto(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": err.Error(),
+			"message": "id must be an integer",
 		})
 	}
 
@@ -136,7 +136,7 @@ func (h *Config) UpdatePhoto(c *fiber.Ctx) error {
 	if photo.UserID != user.ID {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"error":   true,
-			"message": "Forbidden",
+			"message": "You doesn't have access to this resources",
 		})
 	}
 
@@ -192,7 +192,7 @@ func (h *Config) DeletePhoto(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": err.Error(),
+			"message": "id must be an integer",
 		})
 	}
 
@@ -207,7 +207,7 @@ func (h *Config) DeletePhoto(c *fiber.Ctx) error {
 	if photo.UserID != user.ID {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"error":   true,
-			"message": "Forbidden",
+			"message": "You doesn't have access to this resources",
 		})
 	}
 

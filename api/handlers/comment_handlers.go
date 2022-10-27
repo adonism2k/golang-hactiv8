@@ -17,10 +17,12 @@ import (
 // @Produce     json
 // @Security    ApiKeyAuth
 // @Param		auth header string true "Authorization"
-// @Success     200 {array} model.Comment "Success"
+// @Success     200 {array} model.GetComments.Response "Success"
 // @Router      /comments/ [get]
 func (h *Config) GetComments(c *fiber.Ctx) error {
 
+	// Get All Comments Response Model godoc
+	// @Description Get All Comments Response Model
 	type Response struct {
 		ID        int       `json:"id" example:"1"`
 		Message   string    `json:"message" example:"This is a comment"`
@@ -36,7 +38,7 @@ func (h *Config) GetComments(c *fiber.Ctx) error {
 			Url     string `json:"photo_url" example:"https://images.unsplash.com"`
 			UserID  int    `json:"user_id" example:"1"`
 		}
-	}
+	} // @name GetCommentsResponse
 
 	com, err := h.Models.Comment.All()
 	if err != nil {
@@ -169,7 +171,7 @@ func (h *Config) UpdateComment(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": err.Error(),
+			"message": "id must be an integer",
 		})
 	}
 
@@ -184,7 +186,7 @@ func (h *Config) UpdateComment(c *fiber.Ctx) error {
 	if sm.UserID != user.ID {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"error":   true,
-			"message": "Forbidden",
+			"message": "You doesn't have access to this resources",
 		})
 	}
 
@@ -238,7 +240,7 @@ func (h *Config) DeleteComment(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": err.Error(),
+			"message": "id must be an integer",
 		})
 	}
 
@@ -253,7 +255,7 @@ func (h *Config) DeleteComment(c *fiber.Ctx) error {
 	if sm.UserID != user.ID {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"error":   true,
-			"message": "Forbidden",
+			"message": "You doesn't have access to this resources",
 		})
 	}
 
