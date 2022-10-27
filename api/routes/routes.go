@@ -13,9 +13,9 @@ import (
 
 func Api(h handlers.Config, Env initializers.Config) *fiber.App {
 	app := fiber.New()
-	app.Get("/swagger/*", swagger.HandlerDefault)
 	app.Post("/users/login", h.Login)
 	app.Post("/users/register", h.Register)
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	app.Use(logger.New(), cors.New(cors.Config{
 		AllowHeaders:     "Origin, Content-Type, Accept",
@@ -23,7 +23,6 @@ func Api(h handlers.Config, Env initializers.Config) *fiber.App {
 		AllowCredentials: true,
 	}))
 
-	app.Use(middleware.Auth)
 	users := app.Group("/users", middleware.Auth)
 	{
 		users.Put("/:id", middleware.UserOwner, h.UpdateUser)
