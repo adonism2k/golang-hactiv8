@@ -16,7 +16,6 @@ func Api(h handlers.Config, Env initializers.Config) *fiber.App {
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	app.Use(logger.New(), cors.New(cors.Config{
-		AllowOrigins:     "localhost",
 		AllowHeaders:     "Origin, Content-Type, Accept",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
 		AllowCredentials: true,
