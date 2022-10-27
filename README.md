@@ -7,17 +7,6 @@
   Final Project
 </h1>
 
-
-## 🧾 Requirements
-
-- [gofiber/fiber](https://github.com/gofiber/fiber)
-- [go-gorm/gorm](https://github.com/go-gorm/gorm)
-- [swaggo/swag](https://github.com/swaggo/swag)
-- [swaggo/fiber-swagger](https://github.com/swaggo/fiber-swagger)
-- [golang-jwt/jwt](https://github.com/golang-jwt/jwt)
-- [go-playground/validator](https://github.com/go-playground/validator)
-- crypto/bcrypt
-
 ## 🔱 Reference
 
 - [Github Link](https://github.com/adonism2k/golang-hactiv8/tree/final-project)
@@ -27,13 +16,30 @@
 
 ## 🚀 Quick start
 
-1. **Install package**
+1. **Clone the repository**
 
     ```shell
+    git clone https://github.com/adonism2k/golang-hactiv8.git
     cd final-project
+    git checkout final-project
+    ```
+
+2. **Starting up**
+
+    ```shell
     make up
     ```
 
-2. **Open the code and start customizing!**
+3. **Open the code and start customizing!**
 
    Your API is now running at http://localhost:8000. You can also see the swagger documentation at http://localhost:8000/swagger/index.html
+
+## 📦 Used packages
+
+- [gofiber/fiber](https://github.com/gofiber/fiber)
+- [go-gorm/gorm](https://github.com/go-gorm/gorm)
+- [swaggo/swag](https://github.com/swaggo/swag)
+- [swaggo/fiber-swagger](https://github.com/swaggo/fiber-swagger)
+- [golang-jwt/jwt](https://github.com/golang-jwt/jwt)
+- [go-playground/validator](https://github.com/go-playground/validator)
+- crypto/bcrypt
